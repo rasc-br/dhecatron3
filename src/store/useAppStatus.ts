@@ -2,11 +2,11 @@ import { defineStore } from 'pinia';
 
 export const useAppStatus = defineStore('appStatus', {
   state: () => ({
-    angry: true,
+    mood: 'normal' as 'normal' | 'upset' | 'angry',
   }),
   actions: {
-    toggleAngryMode(flag: boolean) {
-      this.angry = flag;
+    toggleMood(flag: 'normal' | 'upset' | 'angry') {
+      this.mood = flag;
     },
   },
 });

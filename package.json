@@ -46,7 +46,8 @@
       "ecmaVersion": 2020
     },
     "rules": {
-      "import/prefer-default-export": "off"
+      "import/prefer-default-export": "off",
+      "vuejs-accessibility/form-control-has-label": "off"
     }
   },
   "browserslist": [
