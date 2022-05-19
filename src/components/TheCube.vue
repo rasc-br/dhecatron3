@@ -1,5 +1,8 @@
 <template>
-  <div :class="['cube', mood]">
+  <div
+    ref="cube"
+    :class="['cube', mood]"
+  >
     <div class="plane">
       <div class="cuboid">
         <div
@@ -15,15 +18,32 @@
 <script lang="ts">
 import { useAppStatus } from '@/store/useAppStatus';
 import { storeToRefs } from 'pinia';
-import { ToRefs } from 'vue';
+import { onMounted, ref, ToRefs } from 'vue';
 
 export default {
   name: 'TheCube',
   setup() {
+    const cube = ref(null);
     const appStore = useAppStatus();
     const { mood }: ToRefs<{ mood: 'normal' | 'upset' | 'angry' }> = storeToRefs(appStore);
+
+    function rotateCube(): void {
+      const newX = Math.random() * (100 - (-100)) - 100;
+      const newY = Math.random() * (100 - (-100)) - 100;
+      if (cube.value) {
+        (cube.value as HTMLElement).style.setProperty('--rotate-x', `${newX}`);
+        (cube.value as HTMLElement).style.setProperty('--rotate-y', `${newY}`);
+      }
+    }
+
+    onMounted(async () => {
+      setTimeout(rotateCube, 200);
+      setInterval(rotateCube, 2500);
+    });
+
     return {
       mood,
+      cube,
     };
   },
 };
@@ -32,15 +52,6 @@ export default {
 <style lang="scss" scoped>
 * {
   box-sizing: border-box;
-}
-:root {
-  --perspective: 800;
-  --rotate-x: -15;
-  --rotate-y: -40;
-  --transform-style: preserve-3d;
-  --cuboid-width: 10;
-  --cuboid-height: 10;
-  --cuboid-depth: 10;
 }
 .normal {
   --exploded: 2;
@@ -55,6 +66,9 @@ export default {
   --color: rgba(230, 25, 25, 0.15);
 }
 .cube {
+  --rotate-x: -24;
+  --rotate-y: -40;
+
   perspective: calc(800 * 1px);
   transform-style: preserve-3d;
   height: 70vh;
@@ -64,9 +78,10 @@ export default {
   justify-content: center;
 }
 .plane {
+  transition: all 5s linear;
   transform-style: preserve-3d;
-  transform: rotateX(calc(-24 * 1deg))
-             rotateY(calc(-40 * 1deg))
+  transform: rotateX(calc(var(--rotate-x) * 1deg))
+             rotateY(calc(var(--rotate-y) * 1deg))
              rotateX(90deg) translate3d(0, 0, 0);
 }
 .cuboid {
