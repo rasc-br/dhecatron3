@@ -28,22 +28,23 @@ export default {
     const { mood }: ToRefs<{ mood: 'normal' | 'upset' | 'angry' }> = storeToRefs(appStore);
 
     function rotateCube(): void {
+      if (!cube.value) return;
+      const cubeElement: HTMLElement = cube.value;
       const newX = Math.random() * (100 - (-100)) - 100;
       const newY = Math.random() * (100 - (-100)) - 100;
-      if (cube.value) {
-        (cube.value as HTMLElement).style.setProperty('--rotate-x', `${newX}`);
-        (cube.value as HTMLElement).style.setProperty('--rotate-y', `${newY}`);
-      }
+      cubeElement.style.setProperty('--rotate-x', `${newX}`);
+      cubeElement.style.setProperty('--rotate-y', `${newY}`);
     }
+    const rotateInterval = ref(setInterval(rotateCube, 2500));
 
     onMounted(async () => {
-      setTimeout(rotateCube, 200);
-      setInterval(rotateCube, 2500);
+      setTimeout(rotateCube, 100);
     });
 
     return {
       mood,
       cube,
+      rotateInterval,
     };
   },
 };
