@@ -1,10 +1,13 @@
 <template>
   <div :class="['input-container', mood]">
+    <div :class="['answer', 'show-vanish', showAnswer]">
+      {{ answer }}
+    </div>
     <input
-      v-model="question"
       type="text"
       placeholder="Don't you dare..."
-      class="input"
+      :class="['input','show-vanish', showInput]"
+      @keyup="theMagic"
     >
   </div>
 </template>
@@ -19,15 +22,55 @@ export default {
   setup() {
     const appStore = useAppStatus();
     const { mood }: ToRefs<{ mood: 'normal' | 'upset' | 'angry' }> = storeToRefs(appStore);
-    const question = ref('');
+    const { badAnswers }: ToRefs<{ badAnswers: string[] }> = storeToRefs(appStore);
+    const inputElement = ref();
+    const realText = ref('');
+    const answer = ref('');
+    const secretActivated = ref(false);
+    const showInput = ref('show');
+    const showAnswer = ref('hide');
 
-    watch(question, (newValue) => {
+    watch(realText, (newValue) => {
       appStore.toggleMood(newValue ? 'upset' : 'normal');
     });
 
+    function askDhecatron() {
+      if (!answer.value) {
+        answer.value = badAnswers.value[Math.floor(Math.random() * badAnswers.value.length)];
+      }
+      showInput.value = 'hide';
+      setTimeout(() => {
+        inputElement.value.value = '';
+        showAnswer.value = 'show';
+        setTimeout(() => {
+          showAnswer.value = 'hide';
+          setTimeout(() => {
+            showInput.value = 'show';
+            answer.value = '';
+            realText.value = '';
+          }, 2000);
+        }, 5000);
+      }, 2000);
+    }
+    function theMagic(event: KeyboardEvent) {
+      if (event.code === 'Enter') {
+        askDhecatron();
+        return;
+      }
+      if (event.code === 'ControlLeft') secretActivated.value = !secretActivated.value;
+      if (!inputElement.value) inputElement.value = event.target as HTMLInputElement;
+      if (secretActivated.value) {
+        answer.value = inputElement.value.value;
+      } else {
+        realText.value = inputElement.value.value;
+      }
+    }
     return {
       mood,
-      question,
+      theMagic,
+      answer,
+      showInput,
+      showAnswer,
     };
   },
 };
@@ -45,9 +88,11 @@ export default {
 }
 .input-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 .input {
+  transition: all 2s ease;
   width: 80%;
   border: 0;
   border-bottom: 1px solid var(--color);
@@ -60,6 +105,18 @@ export default {
 
   &:focus {
     outline: none;
+  }
+}
+.answer {
+  position: absolute;
+}
+.show-vanish {
+  transition: all 2s linear;
+  &.show {
+    opacity: 1;
+  }
+  &.hide {
+    opacity: 0;
   }
 }
 </style>
