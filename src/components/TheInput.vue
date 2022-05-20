@@ -4,6 +4,7 @@
       {{ answer }}
     </div>
     <input
+      ref="inputElement"
       type="text"
       placeholder="Don't you dare..."
       :class="['input','show-vanish', showInput]"
@@ -61,36 +62,27 @@ export default {
 
     function checkInput(event: KeyboardEvent) {
       event.preventDefault();
-      if (!inputElement.value) inputElement.value = event.target as HTMLInputElement;
-      if (!compliment.value) {
-        compliment.value = compliments.value[Math.floor(Math.random() * compliments.value.length)];
-      }
+      if (event.code.includes('Arrow') || event.code.includes('Delete')) return;
       if (event.code === 'Enter') {
         askDhecatron();
         return;
       }
-      if (event.code === 'ControlLeft') secretActivated.value = !secretActivated.value;
-      if (event.code.includes('Arrow') || event.code.includes('Delete')) {
+      if (event.code === 'Backspace') {
+        inputText.value = inputText.value.slice(0, -1);
+        if (secretActivated.value) answer.value = answer.value.slice(0, -1);
         return;
       }
-      if (secretActivated.value) {
-        if (event.code === 'Backspace') {
-          answer.value = answer.value.slice(0, -1);
-          inputText.value = inputText.value.slice(0, -1);
-          return;
-        }
-        if (event.key.length === 1) {
+      if (!compliment.value) {
+        compliment.value = compliments.value[Math.floor(Math.random() * compliments.value.length)];
+      }
+      if (event.code === 'ControlLeft') secretActivated.value = !secretActivated.value;
+      if (event.key.length === 1) {
+        if (secretActivated.value) {
           answer.value = `${answer.value}${event.key}`;
           inputText.value = `${inputText.value}${compliment.value[inputText.value.length]}`;
-        }
-      } else {
-        if (event.code === 'Backspace') {
-          inputText.value = inputText.value.slice(0, -1);
           return;
         }
-        if (event.key.length === 1) {
-          inputText.value = `${inputText.value}${event.key}`;
-        }
+        inputText.value = `${inputText.value}${event.key}`;
       }
     }
 
@@ -98,6 +90,7 @@ export default {
       const element = event.target as HTMLInputElement;
       element.setSelectionRange(element.value.length, element.value.length);
     }
+
     function deliverInput(event: KeyboardEvent) {
       event.preventDefault();
       inputElement.value.value = inputText.value;
@@ -106,6 +99,7 @@ export default {
     return {
       mood,
       answer,
+      inputElement,
       showInput,
       showAnswer,
       secretActivated,
