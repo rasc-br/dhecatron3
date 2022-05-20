@@ -39,6 +39,7 @@ export default {
     });
 
     function askDhecatron() {
+      appStore.toggleMood('angry');
       if (!answer.value) {
         answer.value = badAnswers.value[Math.floor(Math.random() * badAnswers.value.length)];
       }
