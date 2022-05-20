@@ -7,7 +7,9 @@
       type="text"
       placeholder="Don't you dare..."
       :class="['input','show-vanish', showInput]"
-      @keyup="theMagic"
+      @keydown="checkInput"
+      @keyup="deliverInput"
+      @click="goToEnd"
     >
   </div>
 </template>
@@ -23,14 +25,16 @@ export default {
     const appStore = useAppStatus();
     const { mood }: ToRefs<{ mood: 'normal' | 'upset' | 'angry' }> = storeToRefs(appStore);
     const { badAnswers }: ToRefs<{ badAnswers: string[] }> = storeToRefs(appStore);
+    const { compliments }: ToRefs<{ compliments: string[] }> = storeToRefs(appStore);
+    const compliment = ref('');
     const inputElement = ref();
-    const realText = ref('');
+    const inputText = ref('');
     const answer = ref('');
     const secretActivated = ref(false);
     const showInput = ref('show');
     const showAnswer = ref('hide');
 
-    watch(realText, (newValue) => {
+    watch(inputText, (newValue) => {
       appStore.toggleMood(newValue ? 'upset' : 'normal');
     });
 
@@ -47,30 +51,66 @@ export default {
           setTimeout(() => {
             showInput.value = 'show';
             answer.value = '';
-            realText.value = '';
+            inputText.value = '';
+            compliment.value = '';
           }, 2000);
         }, 5000);
       }, 2000);
     }
-    function theMagic(event: KeyboardEvent) {
+
+    function checkInput(event: KeyboardEvent) {
+      event.preventDefault();
+      if (!inputElement.value) inputElement.value = event.target as HTMLInputElement;
+      if (!compliment.value) {
+        compliment.value = compliments.value[Math.floor(Math.random() * compliments.value.length)];
+      }
       if (event.code === 'Enter') {
         askDhecatron();
         return;
       }
       if (event.code === 'ControlLeft') secretActivated.value = !secretActivated.value;
-      if (!inputElement.value) inputElement.value = event.target as HTMLInputElement;
+      if (event.code.includes('Arrow') || event.code.includes('Delete')) {
+        return;
+      }
       if (secretActivated.value) {
-        answer.value = inputElement.value.value;
+        if (event.code === 'Backspace') {
+          answer.value = answer.value.slice(0, -1);
+          inputText.value = inputText.value.slice(0, -1);
+          return;
+        }
+        if (event.key.length === 1) {
+          answer.value = `${answer.value}${event.key}`;
+          inputText.value = `${inputText.value}${compliment.value[inputText.value.length]}`;
+        }
       } else {
-        realText.value = inputElement.value.value;
+        if (event.code === 'Backspace') {
+          inputText.value = inputText.value.slice(0, -1);
+          return;
+        }
+        if (event.key.length === 1) {
+          inputText.value = `${inputText.value}${event.key}`;
+        }
       }
     }
+
+    function goToEnd(event: Event) {
+      const element = event.target as HTMLInputElement;
+      element.setSelectionRange(element.value.length, element.value.length);
+    }
+    function deliverInput(event: KeyboardEvent) {
+      event.preventDefault();
+      inputElement.value.value = inputText.value;
+    }
+
     return {
       mood,
-      theMagic,
       answer,
       showInput,
       showAnswer,
+      secretActivated,
+      checkInput,
+      deliverInput,
+      goToEnd,
     };
   },
 };
