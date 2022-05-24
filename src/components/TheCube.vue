@@ -70,10 +70,8 @@ export default {
   --timing: 1.5;
 }
 .cube {
-  --rotate-x: -24;
-  --rotate-y: -40;
+  --size: 20;
 
-  perspective: calc(800 * 1px);
   transform-style: preserve-3d;
   height: 70vh;
   width: 100vw;
@@ -89,8 +87,8 @@ export default {
              rotateX(90deg) translate3d(0, 0, 0);
 }
 .cuboid {
-  height: calc(10 * 1vmin);
-  width: calc(10 * 1vmin);
+  height: calc(var(--size) * 1vmin);
+  width: calc(var(--size) * 1vmin);
   position: absolute;
   transform-style: preserve-3d;
 }
@@ -99,7 +97,7 @@ export default {
   transition: all 1s ease;
 }
 .cuboid > div:nth-of-type(1) {
-  height: calc(10 * 1vmin);
+  height: calc(var(--size) * 1vmin);
   width: 100%;
   transform-origin: 50% 50%;
   position: absolute;
@@ -107,57 +105,57 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%)
              rotateX(-90deg)
-             translate3d(0, 0, calc(10 / var(--exploded) * 1vmin));
+             translate3d(0, 0, calc(var(--size) / var(--exploded) * 1vmin));
 }
 .cuboid > div:nth-of-type(2) {
-  height: calc(10 * 1vmin);
+  height: calc(var(--size) * 1vmin);
   width: 100%;
   transform-origin: 50% 50%;
   transform: translate(-50%, -50%)
              rotateX(-90deg)
              rotateY(180deg)
-             translate3d(0, 0, calc(10 / var(--exploded) * 1vmin));
+             translate3d(0, 0, calc(var(--size) / var(--exploded) * 1vmin));
   position: absolute;
   top: 50%;
   left: 50%;
 }
 .cuboid > div:nth-of-type(3) {
-  height: calc(10 * 1vmin);
-  width: calc(10 * 1vmin);
+  height: calc(var(--size) * 1vmin);
+  width: calc(var(--size) * 1vmin);
   transform: translate(-50%, -50%)
              rotateX(-90deg)
              rotateY(90deg)
-             translate3d(0, 0, calc(10 / var(--exploded) * 1vmin));
+             translate3d(0, 0, calc(var(--size) / var(--exploded) * 1vmin));
   position: absolute;
   top: 50%;
   left: 50%;
 }
 .cuboid > div:nth-of-type(4) {
-  height: calc(10 * 1vmin);
-  width: calc(10 * 1vmin);
+  height: calc(var(--size) * 1vmin);
+  width: calc(var(--size) * 1vmin);
   transform: translate(-50%, -50%)
              rotateX(-90deg)
              rotateY(-90deg)
-             translate3d(0, 0, calc(10 / var(--exploded) * 1vmin));
+             translate3d(0, 0, calc(var(--size) / var(--exploded) * 1vmin));
   position: absolute;
   top: 50%;
   left: 50%;
 }
 .cuboid > div:nth-of-type(5) {
-  height: calc(10 * 1vmin);
-  width: calc(10 * 1vmin);
+  height: calc(var(--size) * 1vmin);
+  width: calc(var(--size) * 1vmin);
   transform: translate(-50%, -50%)
-             translate3d(0, 0, calc(10 / var(--exploded) * 1vmin));
+             translate3d(0, 0, calc(var(--size) / var(--exploded) * 1vmin));
   position: absolute;
   top: 50%;
   left: 50%;
 }
 .cuboid > div:nth-of-type(6) {
-  height: calc(10 * 1vmin);
-  width: calc(10 * 1vmin);
+  height: calc(var(--size) * 1vmin);
+  width: calc(var(--size) * 1vmin);
   transform: translate(-50%, -50%)
              rotateX(180deg)
-             translate3d(0, 0, calc(10 / var(--exploded) * 1vmin));
+             translate3d(0, 0, calc(var(--size) / var(--exploded) * 1vmin));
   position: absolute;
   top: 50%;
   left: 50%;
