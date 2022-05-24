@@ -166,7 +166,7 @@ export default {
   transform: translate(-50%, -50%);
 }
 .cuboid div {
-  background: var(--color);
+  background-image: linear-gradient(to right, var(--color), rgba(35, 35, 35, 0.15));
   border: 0.5vmin solid #111;
 }
 </style>
