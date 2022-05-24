@@ -47,7 +47,9 @@
     },
     "rules": {
       "import/prefer-default-export": "off",
-      "vuejs-accessibility/form-control-has-label": "off"
+      "vuejs-accessibility/form-control-has-label": "off",
+      "@typescript-eslint/no-var-requires": "off",
+      "global-require": "off"
     }
   },
   "browserslist": [

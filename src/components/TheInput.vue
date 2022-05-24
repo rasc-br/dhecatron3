@@ -40,6 +40,7 @@ export default {
     });
 
     function askDhecatron() {
+      new Audio(require('@/assets/impact.mp3')).play();
       appStore.toggleMood('angry');
       if (!answer.value) {
         answer.value = badAnswers.value[Math.floor(Math.random() * badAnswers.value.length)];
